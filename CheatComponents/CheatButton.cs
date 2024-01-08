@@ -15,6 +15,8 @@ using WindowsFormsApplication1;
 
 namespace CheatComponents
 {
+    // 실제로 트레이너 클릭시 사용하는 치트 버튼 (replace 함수에 의해 일반 버튼이 이 버튼으로 변경됨)
+    // 윈폼 버튼을 상속함
     public class CheatButton : Button
     {
         private const int WH_KEYBOARD_LL = 13;
