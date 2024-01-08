@@ -345,6 +345,9 @@
   <ItemGroup>
     <EmbeddedResource Include="CheatComponents\CheatButton.resx" />
     <EmbeddedResource Include="WindowsFormsApplication1\btn_runspeed.resx" />
+    <EmbeddedResource Include="WindowsFormsApplication1\main.resx">
+      <DependentUpon>main.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WindowsFormsApplication1\Properties\Resources.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
