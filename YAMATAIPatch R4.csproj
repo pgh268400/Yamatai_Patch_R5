@@ -1,0 +1,351 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: F:\Download\Compressed\yamatai4 (2)\YAMATAIPatch R4.exe-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B7E03DD9-D13F-4A7F-BA8F-52453BE52DDA}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>YAMATAIPatch R4</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GameConnector.cs" />
+    <Compile Include="TransparentLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PrivyTokens.cs" />
+    <Compile Include="GameHooks.cs" />
+    <Compile Include="GameOverlay.cs" />
+    <Compile Include="CheatComponents\CheatButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CheatClass\CheatClass.cs" />
+    <Compile Include="WindowsFormsApplication1\main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WindowsFormsApplication1\Program.cs" />
+    <Compile Include="WindowsFormsApplication1\Properties\Settings.cs" />
+    <Compile Include="WindowsFormsApplication1\Properties\Resources.cs" />
+    <Compile Include="Win32\NETRESOURCE.cs" />
+    <Compile Include="Win32\USER_INFO_3.cs" />
+    <Compile Include="Win32\GROUP_INFO_2.cs" />
+    <Compile Include="Win32\LOCALGROUP_MEMBERS_INFO_0.cs" />
+    <Compile Include="Win32\LOCALGROUP_MEMBERS_INFO_1.cs" />
+    <Compile Include="Win32\WKSTA_INFO_102.cs" />
+    <Compile Include="Win32\WKSTA_USER_INFO_1.cs" />
+    <Compile Include="Win32\g_netSID_NAME_USE.cs" />
+    <Compile Include="Win32\Mpr.cs" />
+    <Compile Include="Win32\NetApi.cs" />
+    <Compile Include="Win32\XFORM.cs" />
+    <Compile Include="Win32\BITMAP.cs" />
+    <Compile Include="Win32\RGBTRIPLE.cs" />
+    <Compile Include="Win32\RGBQUAD.cs" />
+    <Compile Include="Win32\BITMAPCOREHEADER.cs" />
+    <Compile Include="Win32\BITMAPINFOHEADER.cs" />
+    <Compile Include="Win32\BITMAPINFO.cs" />
+    <Compile Include="Win32\BITMAPCOREINFO.cs" />
+    <Compile Include="Win32\BITMAPFILEHEADER.cs" />
+    <Compile Include="Win32\HANDLETABLE.cs" />
+    <Compile Include="Win32\METARECORD.cs" />
+    <Compile Include="Win32\METAFILEPICT.cs" />
+    <Compile Include="Win32\METAHEADER.cs" />
+    <Compile Include="Win32\ENHMETARECORD.cs" />
+    <Compile Include="Win32\ENHMETAHEADER.cs" />
+    <Compile Include="Win32\TEXTMETRIC.cs" />
+    <Compile Include="Win32\NEWTEXTMETRIC.cs" />
+    <Compile Include="Win32\PELARRAY.cs" />
+    <Compile Include="Win32\LOGBRUSH.cs" />
+    <Compile Include="Win32\LOGPEN.cs" />
+    <Compile Include="Win32\EXTLOGPEN.cs" />
+    <Compile Include="Win32\PALETTEENTRY.cs" />
+    <Compile Include="Win32\LOGPALETTE.cs" />
+    <Compile Include="Win32\LOGFONT.cs" />
+    <Compile Include="Win32\NONCLIENTMETRICS.cs" />
+    <Compile Include="Win32\ENUMLOGFONT.cs" />
+    <Compile Include="Win32\PANOSE.cs" />
+    <Compile Include="Win32\EXTLOGFONT.cs" />
+    <Compile Include="Win32\DEVMODE.cs" />
+    <Compile Include="Win32\RGNDATAHEADER.cs" />
+    <Compile Include="Win32\RGNDATA.cs" />
+    <Compile Include="Win32\ABC.cs" />
+    <Compile Include="Win32\ABCFLOAT.cs" />
+    <Compile Include="Win32\OUTLINETEXTMETRIC.cs" />
+    <Compile Include="Win32\POLYTEXT.cs" />
+    <Compile Include="Win32\FIXED.cs" />
+    <Compile Include="Win32\MAT2.cs" />
+    <Compile Include="Win32\GLYPHMETRICS.cs" />
+    <Compile Include="Win32\POINTFX.cs" />
+    <Compile Include="Win32\TTPOLYCURVE.cs" />
+    <Compile Include="Win32\TTPOLYGONHEADER.cs" />
+    <Compile Include="Win32\RASTERIZER_STATUS.cs" />
+    <Compile Include="Win32\COLORADJUSTMENT.cs" />
+    <Compile Include="Win32\DOCINFO.cs" />
+    <Compile Include="Win32\KERNINGPAIR.cs" />
+    <Compile Include="Win32\BITMAPV4HEADER.cs" />
+    <Compile Include="Win32\FONTSIGNATURE.cs" />
+    <Compile Include="Win32\CHARSETINFO.cs" />
+    <Compile Include="Win32\LOCALESIGNATURE.cs" />
+    <Compile Include="Win32\NEWTEXTMETRICEX.cs" />
+    <Compile Include="Win32\ENUMLOGFONTEX.cs" />
+    <Compile Include="Win32\GCP_RESULTS.cs" />
+    <Compile Include="Win32\CIEXYZ.cs" />
+    <Compile Include="Win32\CIEXYZTRIPLE.cs" />
+    <Compile Include="Win32\LOGCOLORSPACE.cs" />
+    <Compile Include="Win32\PIXELFORMATDESCRIPTOR.cs" />
+    <Compile Include="Win32\GDI.cs" />
+    <Compile Include="Win32\RECT.cs" />
+    <Compile Include="Win32\POINT.cs" />
+    <Compile Include="Win32\SIZE.cs" />
+    <Compile Include="Win32\FILETIME.cs" />
+    <Compile Include="Win32\SYSTEMTIME.cs" />
+    <Compile Include="Win32\DRAGINFO.cs" />
+    <Compile Include="Win32\APPBARDATA.cs" />
+    <Compile Include="Win32\SHFILEOPSTRUCT.cs" />
+    <Compile Include="Win32\SHNAMEMAPPING.cs" />
+    <Compile Include="Win32\SHELLEXECUTEINFO.cs" />
+    <Compile Include="Win32\NOTIFYICONDATA.cs" />
+    <Compile Include="Win32\SHFILEINFO.cs" />
+    <Compile Include="Win32\Shell.cs" />
+    <Compile Include="Win32\ERROR.cs" />
+    <Compile Include="Win32\CBTACTIVATESTRUCT.cs" />
+    <Compile Include="Win32\EVENTMSG.cs" />
+    <Compile Include="Win32\CWPSTRUCT.cs" />
+    <Compile Include="Win32\DEBUGHOOKINFO.cs" />
+    <Compile Include="Win32\MOUSEHOOKSTRUCT.cs" />
+    <Compile Include="Win32\MINMAXINFO.cs" />
+    <Compile Include="Win32\COPYDATASTRUCT.cs" />
+    <Compile Include="Win32\WINDOWPOS.cs" />
+    <Compile Include="Win32\ACCEL.cs" />
+    <Compile Include="Win32\PAINTSTRUCT.cs" />
+    <Compile Include="Win32\CREATESTRUCT.cs" />
+    <Compile Include="Win32\CBT_CREATEWND.cs" />
+    <Compile Include="Win32\WINDOWPLACEMENT.cs" />
+    <Compile Include="Win32\MEASUREITEMSTRUCT.cs" />
+    <Compile Include="Win32\DRAWITEMSTRUCT.cs" />
+    <Compile Include="Win32\DELETEITEMSTRUCT.cs" />
+    <Compile Include="Win32\COMPAREITEMSTRUCT.cs" />
+    <Compile Include="Win32\MSG.cs" />
+    <Compile Include="Win32\WNDCLASS.cs" />
+    <Compile Include="Win32\DLGTEMPLATE.cs" />
+    <Compile Include="Win32\DLGITEMTEMPLATE.cs" />
+    <Compile Include="Win32\MENUITEMTEMPLATEHEADER.cs" />
+    <Compile Include="Win32\MENUITEMTEMPLATE.cs" />
+    <Compile Include="Win32\ICONINFO.cs" />
+    <Compile Include="Win32\MDICREATESTRUCT.cs" />
+    <Compile Include="Win32\CLIENTCREATESTRUCT.cs" />
+    <Compile Include="Win32\MULTIKEYHELP.cs" />
+    <Compile Include="Win32\HELPWININFO.cs" />
+    <Compile Include="Win32\DDEACK.cs" />
+    <Compile Include="Win32\DDEADVISE.cs" />
+    <Compile Include="Win32\DDEDATA.cs" />
+    <Compile Include="Win32\DDEPOKE.cs" />
+    <Compile Include="Win32\DDELN.cs" />
+    <Compile Include="Win32\DDEUP.cs" />
+    <Compile Include="Win32\HSZPAIR.cs" />
+    <Compile Include="Win32\SECURITY_QUALITY_OF_SERVICE.cs" />
+    <Compile Include="Win32\CONVCONTEXT.cs" />
+    <Compile Include="Win32\CONVINFO.cs" />
+    <Compile Include="Win32\DDEML_MSG_HOOK_DATA.cs" />
+    <Compile Include="Win32\MONMSGSTRUCT.cs" />
+    <Compile Include="Win32\MONCBSTRUCT.cs" />
+    <Compile Include="Win32\MONHSZSTRUCT.cs" />
+    <Compile Include="Win32\MONERRSTRUCT.cs" />
+    <Compile Include="Win32\MONLINKSTRUCT.cs" />
+    <Compile Include="Win32\MONCONVSTRUCT.cs" />
+    <Compile Include="Win32\DRAWTEXTPARAMS.cs" />
+    <Compile Include="Win32\MENUITEMINFO.cs" />
+    <Compile Include="Win32\SCROLLINFO.cs" />
+    <Compile Include="Win32\MSGBOXPARAMS.cs" />
+    <Compile Include="Win32\WNDCLASSEX.cs" />
+    <Compile Include="Win32\TPMPARAMS.cs" />
+    <Compile Include="Win32\BROWSEINFO.cs" />
+    <Compile Include="Win32\ComCtl.cs" />
+    <Compile Include="Win32\Ole.cs" />
+    <Compile Include="Win32\User.cs" />
+    <Compile Include="Win32\SMPTE.cs" />
+    <Compile Include="Win32\MIDI.cs" />
+    <Compile Include="Win32\MMTIME.cs" />
+    <Compile Include="Win32\MIDIEVENT.cs" />
+    <Compile Include="Win32\MIDISTRMBUFFVER.cs" />
+    <Compile Include="Win32\MIDIPROPTIMEDIV.cs" />
+    <Compile Include="Win32\MIDIPROPTEMPO.cs" />
+    <Compile Include="Win32\MIXERCAPS.cs" />
+    <Compile Include="Win32\TARGET.cs" />
+    <Compile Include="Win32\MIXERLINE.cs" />
+    <Compile Include="Win32\MIXERCONTROL.cs" />
+    <Compile Include="Win32\MIXERLINECONTROLS.cs" />
+    <Compile Include="Win32\MIXERCONTROLDETAILS.cs" />
+    <Compile Include="Win32\MIXERCONTROLDETAILS_LISTTEXT.cs" />
+    <Compile Include="Win32\MIXERCONTROLDETAILS_BOOLEAN.cs" />
+    <Compile Include="Win32\MIXERCONTROLDETAILS_SIGNED.cs" />
+    <Compile Include="Win32\MIXERCONTROLDETAILS_UNSIGNED.cs" />
+    <Compile Include="Win32\JOYINFOEX.cs" />
+    <Compile Include="Win32\DRVCONFIGINFO.cs" />
+    <Compile Include="Win32\WAVEHDR.cs" />
+    <Compile Include="Win32\WAVEOUTCAPS.cs" />
+    <Compile Include="Win32\WAVEINCAPS.cs" />
+    <Compile Include="Win32\WAVEFORMAT.cs" />
+    <Compile Include="Win32\PCMWAVEFORMAT.cs" />
+    <Compile Include="Win32\MIDIOUTCAPS.cs" />
+    <Compile Include="Win32\MIDIINCAPS.cs" />
+    <Compile Include="Win32\MIDIHDR.cs" />
+    <Compile Include="Win32\AUXCAPS.cs" />
+    <Compile Include="Win32\TIMECAPS.cs" />
+    <Compile Include="Win32\JOYCAPS.cs" />
+    <Compile Include="Win32\JOYINFO.cs" />
+    <Compile Include="Win32\MMIOINFO.cs" />
+    <Compile Include="Win32\MMCKINFO.cs" />
+    <Compile Include="Win32\MCI_GENERIC_PARMS.cs" />
+    <Compile Include="Win32\MCI_OPEN_PARMS.cs" />
+    <Compile Include="Win32\MCI_PLAY_PARMS.cs" />
+    <Compile Include="Win32\MCI_SEEK_PARMS.cs" />
+    <Compile Include="Win32\MCI_STATUS_PARMS.cs" />
+    <Compile Include="Win32\MCI_INFO_PARMS.cs" />
+    <Compile Include="Win32\MCI_GETDEVCAPS_PARMS.cs" />
+    <Compile Include="Win32\MCI_SYSINFO_PARMS.cs" />
+    <Compile Include="Win32\MCI_SET_PARMS.cs" />
+    <Compile Include="Win32\MCI_BREAK_PARMS.cs" />
+    <Compile Include="Win32\MCI_SOUND_PARMS.cs" />
+    <Compile Include="Win32\MCI_SAVE_PARMS.cs" />
+    <Compile Include="Win32\MCI_LOAD_PARMS.cs" />
+    <Compile Include="Win32\MCI_RECORD_PARMS.cs" />
+    <Compile Include="Win32\MCI_VD_PLAY_PARMS.cs" />
+    <Compile Include="Win32\MCI_VD_STEP_PARMS.cs" />
+    <Compile Include="Win32\MCI_VD_ESCAPE_PARMS.cs" />
+    <Compile Include="Win32\MCI_WAVE_OPEN_PARMS.cs" />
+    <Compile Include="Win32\MCI_WAVE_DELETE_PARMS.cs" />
+    <Compile Include="Win32\MCI_WAVE_SET_PARMS.cs" />
+    <Compile Include="Win32\MCI_SEQ_SET_PARMS.cs" />
+    <Compile Include="Win32\MCI_ANIM_OPEN_PARMS.cs" />
+    <Compile Include="Win32\MCI_ANIM_PLAY_PARMS.cs" />
+    <Compile Include="Win32\MCI_ANIM_STEP_PARMS.cs" />
+    <Compile Include="Win32\MCI_ANIM_WINDOW_PARMS.cs" />
+    <Compile Include="Win32\MCI_ANIM_RECT_PARMS.cs" />
+    <Compile Include="Win32\MCI_ANIM_UPDATE_PARMS.cs" />
+    <Compile Include="Win32\MCI_OVLY_OPEN_PARMS.cs" />
+    <Compile Include="Win32\MCI_OVLY_WINDOW_PARMS.cs" />
+    <Compile Include="Win32\MCI_OVLY_RECT_PARMS.cs" />
+    <Compile Include="Win32\MCI_OVLY_SAVE_PARMS.cs" />
+    <Compile Include="Win32\MCI_OVLY_LOAD_PARMS.cs" />
+    <Compile Include="Win32\LZ.cs" />
+    <Compile Include="Win32\WinMM.cs" />
+    <Compile Include="Win32\OVERLAPPED.cs" />
+    <Compile Include="Win32\SECURITY_ATTRIBUTES.cs" />
+    <Compile Include="Win32\PROCESS_INFORMATION.cs" />
+    <Compile Include="Win32\COMMPROP.cs" />
+    <Compile Include="Win32\COMSTAT.cs" />
+    <Compile Include="Win32\DCB.cs" />
+    <Compile Include="Win32\COMMTIMEOUTS.cs" />
+    <Compile Include="Win32\SYSTEM_INFO.cs" />
+    <Compile Include="Win32\MEMORYSTATUS.cs" />
+    <Compile Include="Win32\GENERIC_MAPPING.cs" />
+    <Compile Include="Win32\LUID.cs" />
+    <Compile Include="Win32\LUID_AND_ATTRIBUTES.cs" />
+    <Compile Include="Win32\ACL.cs" />
+    <Compile Include="Win32\ACE_HEADER.cs" />
+    <Compile Include="Win32\ACCESS_ALLOWED_ACE.cs" />
+    <Compile Include="Win32\ACCESS_DENIED_ACE.cs" />
+    <Compile Include="Win32\SYSTEM_AUDIT_ACE.cs" />
+    <Compile Include="Win32\SYSTEM_ALARM_ACE.cs" />
+    <Compile Include="Win32\ACL_REVISION_INFORMATION.cs" />
+    <Compile Include="Win32\ACL_SIZE_INFORMATION.cs" />
+    <Compile Include="Win32\SECURITY_DESCRIPTOR.cs" />
+    <Compile Include="Win32\PRIVILEGE_SET.cs" />
+    <Compile Include="Win32\EXCEPTION_RECORD.cs" />
+    <Compile Include="Win32\EXCEPTION_DEBUG_INFO.cs" />
+    <Compile Include="Win32\CREATE_THREAD_DEBUG_INFO.cs" />
+    <Compile Include="Win32\CREATE_PROCESS_DEBUG_INFO.cs" />
+    <Compile Include="Win32\EXIT_THREAD_DEBUG_INFO.cs" />
+    <Compile Include="Win32\EXIT_PROCESS_DEBUG_INFO.cs" />
+    <Compile Include="Win32\LOAD_DLL_DEBUG_INFO.cs" />
+    <Compile Include="Win32\UNLOAD_DLL_DEBUG_INFO.cs" />
+    <Compile Include="Win32\OUTPUT_DEBUG_STRING_INFO.cs" />
+    <Compile Include="Win32\RIP_INFO.cs" />
+    <Compile Include="Win32\OFSTRUCT.cs" />
+    <Compile Include="Win32\CRITICAL_SECTION.cs" />
+    <Compile Include="Win32\BY_HANDLE_FILE_INFORMATION.cs" />
+    <Compile Include="Win32\MEMORY_BASIC_INFORMATION.cs" />
+    <Compile Include="Win32\EVENTLOGRECORD.cs" />
+    <Compile Include="Win32\TOKEN_GROUPS.cs" />
+    <Compile Include="Win32\TOKEN_PRIVILEGES.cs" />
+    <Compile Include="Win32\CONTEXT.cs" />
+    <Compile Include="Win32\EXCEPTION_POINTERS.cs" />
+    <Compile Include="Win32\LDT_BYTES.cs" />
+    <Compile Include="Win32\LDT_ENTRY.cs" />
+    <Compile Include="Win32\TIME_ZONE_INFORMATION.cs" />
+    <Compile Include="Win32\WIN32_STREAM_ID.cs" />
+    <Compile Include="Win32\STARTUPINFO.cs" />
+    <Compile Include="Win32\CPINFO.cs" />
+    <Compile Include="Win32\NUMBERFMT.cs" />
+    <Compile Include="Win32\CURRENCYFMT.cs" />
+    <Compile Include="Win32\COORD.cs" />
+    <Compile Include="Win32\SMALL_RECT.cs" />
+    <Compile Include="Win32\KEY_EVENT_RECORD.cs" />
+    <Compile Include="Win32\MOUSE_EVENT_RECORD.cs" />
+    <Compile Include="Win32\WINDOW_BUFFER_SIZE_RECORD.cs" />
+    <Compile Include="Win32\MENU_EVENT_RECORD.cs" />
+    <Compile Include="Win32\FOCUS_EVENT_RECORD.cs" />
+    <Compile Include="Win32\CHAR_INFO.cs" />
+    <Compile Include="Win32\CONSOLE_SCREEN_BUFFER_INFO.cs" />
+    <Compile Include="Win32\CONSOLE_CURSOR_INFO.cs" />
+    <Compile Include="Win32\SID_IDENTIFIER_AUTHORITY.cs" />
+    <Compile Include="Win32\SID_AND_ATTRIBUTES.cs" />
+    <Compile Include="Win32\WIN32_FIND_DATA.cs" />
+    <Compile Include="Win32\COMMCONFIG.cs" />
+    <Compile Include="Win32\SERVICE_STATUS.cs" />
+    <Compile Include="Win32\ENUM_SERVICE_STATUS.cs" />
+    <Compile Include="Win32\QUERY_SERVICE_LOCK_STATUS.cs" />
+    <Compile Include="Win32\QUERY_SERVICE_CONFIG.cs" />
+    <Compile Include="Win32\SERVICE_TABLE_ENTRY.cs" />
+    <Compile Include="Win32\LARGE_INTEGER.cs" />
+    <Compile Include="Win32\PERF_DATA_BLOCK.cs" />
+    <Compile Include="Win32\PERF_OBJECT_TYPE.cs" />
+    <Compile Include="Win32\PERF_COUNTER_DEFINITION.cs" />
+    <Compile Include="Win32\PERF_INSTANCE_DEFINITION.cs" />
+    <Compile Include="Win32\PERF_COUNTER_BLOCK.cs" />
+    <Compile Include="Win32\OSVERSIONINFO.cs" />
+    <Compile Include="Win32\SYSTEM_POWER_STATUS.cs" />
+    <Compile Include="Win32\AdvApi.cs" />
+    <Compile Include="Win32\Version.cs" />
+    <Compile Include="Win32\Kernel.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CheatComponents\CheatButton.resx" />
+    <EmbeddedResource Include="WindowsFormsApplication1\btn_runspeed.resx" />
+    <EmbeddedResource Include="WindowsFormsApplication1\Properties\Resources.resx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
