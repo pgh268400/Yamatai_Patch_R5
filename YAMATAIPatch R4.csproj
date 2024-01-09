@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B7E03DD9-D13F-4A7F-BA8F-52453BE52DDA}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AssemblyName>YAMATAIPatch R4</AssemblyName>
+    <AssemblyName>YAMATAIPatch R5</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <ApplicationVersion>1.0.0.0</ApplicationVersion>
     <FileAlignment>512</FileAlignment>

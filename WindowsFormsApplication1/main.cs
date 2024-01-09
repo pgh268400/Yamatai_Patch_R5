@@ -1013,7 +1013,6 @@ namespace WindowsFormsApplication1
             statusLabel.Size = new System.Drawing.Size(99, 17);
             statusLabel.TabIndex = 31;
             statusLabel.Text = "KAPOW POW!";
-            statusLabel.Click += statusLabel_Click;
             // 
             // btn_jumpheight_1
             // 
@@ -1754,7 +1753,7 @@ namespace WindowsFormsApplication1
                 cbKeybinds,
                 cbOverlay
             };
-            loadSettings();
+            load_settings();
         }
 
         public void updateEditBoxes()
@@ -2423,11 +2422,6 @@ namespace WindowsFormsApplication1
         }
 
 
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-        }
-
         private void Debugging_Click(object sender, EventArgs e)
         {
         }
@@ -2438,9 +2432,6 @@ namespace WindowsFormsApplication1
 
 
 
-        private void statusLabel_Click(object sender, EventArgs e)
-        {
-        }
 
         private void timer3_Tick(object sender, EventArgs e) => GameOverlay.tick();
 
@@ -2459,7 +2450,7 @@ namespace WindowsFormsApplication1
         {
         }
 
-        public void saveSettings()
+        public void save_settings()
         {
             settingsBox.Text = "";
             for (int index = 0; index < saveableCheckBoxes.Length; ++index)
@@ -2471,46 +2462,47 @@ namespace WindowsFormsApplication1
             settingsBox.SaveFile("settings.dat");
         }
 
-        public void loadSettings()
+        public void load_settings()
         {
             settingsBox.Text = "";
-            if (File.Exists("settings.dat"))
+            if (!File.Exists("settings.dat"))
             {
-                settingsBox.LoadFile("settings.dat");
-                string[] strArray1 = settingsBox.Text.Split('|');
-                if (settingsBox.Text.Length > 1)
+                addText("No settings found , they will be created");
+                return;
+            }
+
+            settingsBox.LoadFile("settings.dat");
+            string[] strArray1 = settingsBox.Text.Split('|');
+            if (settingsBox.Text.Length > 1)
+            {
+                for (int index1 = 0; index1 < strArray1.Length; ++index1)
                 {
-                    for (int index1 = 0; index1 < strArray1.Length; ++index1)
+                    string[] strArray2 = strArray1[index1].Split(',');
+                    if (strArray1[index1].Length > 5)
                     {
-                        string[] strArray2 = strArray1[index1].Split(',');
-                        if (strArray1[index1].Length > 5)
+                        bool flag = bool.Parse(strArray2[1]);
+                        for (int index2 = 0; index2 < saveableCheckBoxes.Length; ++index2)
                         {
-                            bool flag = bool.Parse(strArray2[1]);
-                            for (int index2 = 0; index2 < saveableCheckBoxes.Length; ++index2)
-                            {
-                                CheckBox saveableCheckBox = saveableCheckBoxes[index2];
-                                if (saveableCheckBox.Text == strArray2[0])
-                                    saveableCheckBox.Checked = flag;
-                            }
+                            CheckBox saveableCheckBox = saveableCheckBoxes[index2];
+                            if (saveableCheckBox.Text == strArray2[0])
+                                saveableCheckBox.Checked = flag;
                         }
                     }
                 }
-
-                GameHooks.hotkeysDisabled = cbKeybinds.Checked;
             }
-            else
-                addText("No settings found , they will be created");
+
+            GameHooks.hotkeysDisabled = cbKeybinds.Checked;
         }
 
-        private void button1_Click_3(object sender, EventArgs e) => saveSettings();
+        private void button1_Click_3(object sender, EventArgs e) => save_settings();
 
-        private void button2_Click(object sender, EventArgs e) => loadSettings();
+        private void button2_Click(object sender, EventArgs e) => load_settings();
 
-        private void cbKeybinds_CheckedChanged(object sender, EventArgs e) => saveSettings();
+        private void cbKeybinds_CheckedChanged(object sender, EventArgs e) => save_settings();
 
-        private void cbOverlay_CheckedChanged(object sender, EventArgs e) => saveSettings();
+        private void cbOverlay_CheckedChanged(object sender, EventArgs e) => save_settings();
 
-        private void cbAutoUpdate_CheckedChanged(object sender, EventArgs e) => saveSettings();
+        private void cbAutoUpdate_CheckedChanged(object sender, EventArgs e) => save_settings();
 
         private void button1_Click_4(object sender, EventArgs e)
         {

@@ -38,15 +38,15 @@ namespace CheatComponents
         public static List<CheatButton> buttonList = new List<CheatButton>();
         public static RichTextBox saveBox;
         public static bool hookInstalled = false;
-        private static CheatButton.LowLevelKeyboardProc _proc = new CheatButton.LowLevelKeyboardProc(CheatButton.HookCallback);
+        private static LowLevelKeyboardProc _proc = new LowLevelKeyboardProc(HookCallback);
         private static IntPtr _hookID = IntPtr.Zero;
         public static Label sLabel;
 
         public CheatButton(string _ID, string _nameString)
         {
-            this.ID = _ID;
-            this.nameString = _nameString;
-            this.init();
+            ID = _ID;
+            nameString = _nameString;
+            init();
         }
 
         public CheatButton(
@@ -56,10 +56,10 @@ namespace CheatComponents
           List<string> _EnableStrings,
           List<string> _DisableStrings)
         {
-            this.ID = _ID;
-            this.nameString = _nameString;
-            this.attachCheats(_ClickStrings, _EnableStrings, _DisableStrings);
-            this.init();
+            ID = _ID;
+            nameString = _nameString;
+            attachCheats(_ClickStrings, _EnableStrings, _DisableStrings);
+            init();
         }
 
         public void attachCheats(
@@ -67,108 +67,108 @@ namespace CheatComponents
           List<string> _EnableStrings,
           List<string> _DisableStrings)
         {
-            this.ClickStrings = _ClickStrings;
-            this.EnableStrings = _EnableStrings;
-            this.DisableStrings = _DisableStrings;
+            ClickStrings = _ClickStrings;
+            EnableStrings = _EnableStrings;
+            DisableStrings = _DisableStrings;
         }
 
-        public CheatButton() => this.init();
+        public CheatButton() => init();
 
         public void init()
         {
-            this.InitializeComponent();
-            this.hotkey = 0U;
-            this.controlKey = 0U;
-            this.Width = 200;
-            this.Height = 40;
-            CheatButton.buttonList.Add(this);
-            this.addmyButton();
-            this.addmyCheckBox();
-            this.addMyEditBox();
-            this.setColor();
-            this.addListeners();
-            CheatButton.Hookey();
-            this.mode_normal();
-            CheatButton.saveBox = main.sBox;
-            this.FlatAppearance.BorderColor = CheatButton._back;
-            this.FlatStyle = FlatStyle.Flat;
-            this.myButton.FlatAppearance.BorderColor = CheatButton._back;
-            this.myButton.FlatStyle = FlatStyle.Flat;
-            if (this.myCheckBox == null)
+            InitializeComponent();
+            hotkey = 0U;
+            controlKey = 0U;
+            Width = 200;
+            Height = 40;
+            buttonList.Add(this);
+            addmyButton();
+            addmyCheckBox();
+            addMyEditBox();
+            setColor();
+            addListeners();
+            Hookey();
+            mode_normal();
+            saveBox = main.sBox;
+            FlatAppearance.BorderColor = _back;
+            FlatStyle = FlatStyle.Flat;
+            myButton.FlatAppearance.BorderColor = _back;
+            myButton.FlatStyle = FlatStyle.Flat;
+            if (myCheckBox == null)
                 return;
-            this.myCheckBox.FlatAppearance.BorderColor = CheatButton._back;
-            this.myCheckBox.FlatStyle = FlatStyle.Flat;
+            myCheckBox.FlatAppearance.BorderColor = _back;
+            myCheckBox.FlatStyle = FlatStyle.Flat;
         }
 
         public void addListeners()
         {
-            this.Click += new EventHandler(this.self_click);
-            this.myButton.Click += new EventHandler(this.hotkey_click);
-            if (!this.hasCheckBox)
+            Click += new EventHandler(self_click);
+            myButton.Click += new EventHandler(hotkey_click);
+            if (!hasCheckBox)
                 return;
-            this.myCheckBox.Click += new EventHandler(this.self_click);
+            myCheckBox.Click += new EventHandler(self_click);
         }
 
         public void setColor()
         {
-            if (this.hasCheckBox)
+            if (hasCheckBox)
             {
-                if (this.myCheckBox.Checked)
+                if (myCheckBox.Checked)
                 {
-                    this.ForeColor = ColorTranslator.FromOle(34816);
-                    this.BackColor = this.BackColor;
+                    ForeColor = ColorTranslator.FromOle(34816);
+                    BackColor = BackColor;
                 }
                 else
                 {
-                    this.ForeColor = ColorTranslator.FromOle(0);
-                    this.BackColor = this.BackColor;
+                    ForeColor = ColorTranslator.FromOle(0);
+                    BackColor = BackColor;
                 }
             }
             else
             {
-                this.ForeColor = ColorTranslator.FromOle(0);
-                this.BackColor = this.BackColor;
+                ForeColor = ColorTranslator.FromOle(0);
+                BackColor = BackColor;
             }
         }
 
         public void updateName()
         {
-            string str1 = this.hotkeyMode ? "Shortcut keys:" : this.nameString;
+            string str1 = hotkeyMode ? "Shortcut keys:" : nameString;
             string str2 = "";
-            if (this.controlKey > 0U)
-                str2 = str2 + ((Keys)this.controlKey).ToString() + "+";
-            if (this.hotkey > 0U)
-                str2 += ((Keys)this.hotkey).ToString();
-            if (this.hotkey > 0U)
+            if (controlKey > 0U)
+                str2 = str2 + ((Keys)controlKey).ToString() + "+";
+            if (hotkey > 0U)
+                str2 += ((Keys)hotkey).ToString();
+            if (hotkey > 0U)
                 str2 = "\n" + str2;
-            this.Text = str1 + str2;
+            Text = str1 + str2;
         }
 
         private void self_click(object sender, EventArgs e)
         {
-            this.addText("Processing click..." + this.Text);
-            if (this.hasCheckBox)
+            addText("Processing click..." + Text);
+            if (hasCheckBox)
             {
-                this.myCheckBox.Checked = !this.myCheckBox.Checked;
-                this.setColor();
-                if (this.myCheckBox.Checked)
-                    this.doClickAction(this.EnableStrings);
+                myCheckBox.Checked = !myCheckBox.Checked;
+                setColor();
+                if (myCheckBox.Checked)
+                    doClickAction(EnableStrings);
                 else
-                    this.doClickAction(this.DisableStrings);
+                    doClickAction(DisableStrings);
             }
-            if (this.ClickStrings != null)
-                this.doClickAction(this.ClickStrings);
-            this.Invalidate();
+            if (ClickStrings != null)
+                doClickAction(ClickStrings);
+            Invalidate();
         }
 
         public void fillEditBox()
         {
-            if (this.ClickStrings == null || this.ClickStrings.Count <= 0)
+            if (ClickStrings == null || ClickStrings.Count <= 0)
                 return;
-            for (int index = 0; index < this.ClickStrings.Count; ++index)
+            for (int index = 0; index < ClickStrings.Count; ++index)
             {
-                if (this.ClickStrings[index][0] == '@')
-                    this.myEditBox.Text = this.ClickStrings[index].Split('@')[2];
+                if (ClickStrings[index][0] == '@')
+                    myEditBox.Text = ClickStrings[index].Split('@')[2];
             }
         }
 
@@ -178,7 +178,7 @@ namespace CheatComponents
                 return;
             for (int index = 0; index < inStrings.Count; ++index)
             {
-                if (this.Parent != null)
+                if (Parent != null)
                 {
                     main.lastButton = this;
                     main.staticSelf.showButtonPanel();
@@ -186,46 +186,46 @@ namespace CheatComponents
                 if (inStrings[index][0] == '|')
                 {
                     string[] strArray = inStrings[index].Split('|');
-                    GameConnector.writeString((IntPtr)(long)uint.Parse(strArray[1], NumberStyles.AllowHexSpecifier), strArray[2]);
+                    GameConnector.writeString((IntPtr)uint.Parse(strArray[1], NumberStyles.AllowHexSpecifier), strArray[2]);
                 }
                 if (inStrings[index][0] == '@')
                 {
                     string[] strArray = inStrings[index].Split('@');
                     string inName = strArray[1];
-                    string inParam1 = this.myEditBox != null ? this.myEditBox.Text : strArray[2];
+                    string inParam1 = myEditBox != null ? myEditBox.Text : strArray[2];
                     string inParam2 = strArray[3];
                     main.staticSelf.functionCall(inName, inParam1, inParam2);
                 }
             }
-            this.drawMyString();
+            drawMyString();
         }
 
-        public void drawMyString() => GameOverlay.drawString(this.myCheckBox == null ? (this.myEditBox == null ? this.nameString : this.nameString + " : " + this.myEditBox.Text) : this.nameString + " : " + (this.myCheckBox.Checked ? "Enabled" : "Disabled"));
+        public void drawMyString() => GameOverlay.drawString(myCheckBox == null ? (myEditBox == null ? nameString : nameString + " : " + myEditBox.Text) : nameString + " : " + (myCheckBox.Checked ? "Enabled" : "Disabled"));
 
         private void hotkey_click(object sender, EventArgs e)
         {
-            this.addText("Hotkey Click!");
-            if (this.hotkeyMode)
-                this.mode_normal();
+            addText("Hotkey Click!");
+            if (hotkeyMode)
+                mode_normal();
             else
-                this.mode_hotkey();
+                mode_hotkey();
         }
 
         public void mode_hotkey()
         {
-            this.hotkeyMode = true;
-            this.myButton.Text = "OK.";
-            this.updateName();
+            hotkeyMode = true;
+            myButton.Text = "OK.";
+            updateName();
             main.status(" [Esc] to clear keybind ");
         }
 
         public void mode_normal()
         {
-            if (this.hotkeyMode)
+            if (hotkeyMode)
                 main.status(" Keybind Saved ");
-            this.hotkeyMode = false;
-            this.myButton.Text = "...";
-            this.updateName();
+            hotkeyMode = false;
+            myButton.Text = "...";
+            updateName();
         }
 
         public void addText(string inString) => main.addText(inString);
@@ -233,99 +233,100 @@ namespace CheatComponents
         public void hotkeyPressed(uint keyVal)
         {
             if (!GameHooks.hotkeysDisabled)
-                this.self_click((object)null, (EventArgs)null);
-            this.addText("yeah, hotkey pressed" + keyVal.ToString());
+                self_click(null, null);
+            addText("yeah, hotkey pressed" + keyVal.ToString());
         }
 
         public void setHotkey(uint keyVal)
         {
             if (27U != keyVal)
             {
-                this.addText("Setting my hotkey" + keyVal.ToString());
-                this.hotkey = keyVal;
-                this.controlKey = (uint)Control.ModifierKeys;
+                addText("Setting my hotkey" + keyVal.ToString());
+                hotkey = keyVal;
+                controlKey = (uint)ModifierKeys;
             }
             else
             {
-                this.hotkey = 0U;
-                this.controlKey = 0U;
+                hotkey = 0U;
+                controlKey = 0U;
             }
-            this.updateName();
-            CheatButton.saveHotkeys();
+            updateName();
+            saveHotkeys();
         }
 
         public Font getFont() => new Font(FontFamily.GenericSansSerif, 10f);
 
         public void addmyButton()
         {
-            this.myButton = new Button();
-            this.myButton.Width = 40;
-            this.myButton.Height = 30;
-            this.myButton.Left = this.Width - this.myButton.Width - 5;
-            this.myButton.Top = this.Height / 2 - this.myButton.Height / 2;
-            this.myButton.Text = "...";
-            this.myButton.Font = this.getFont();
-            this.Controls.Add((Control)this.myButton);
+            myButton = new Button();
+            myButton.Width = 40;
+            myButton.Height = 30;
+            myButton.Left = Width - myButton.Width - 5;
+            myButton.Top = Height / 2 - myButton.Height / 2;
+            myButton.Text = "...";
+            myButton.Font = getFont();
+            Controls.Add(myButton);
         }
 
         public void addMyEditBox()
         {
-            if (this.ID.IndexOf("spawnButton") <= -1 && this.ID.IndexOf("btn_edit_") <= -1)
+            if (ID.IndexOf("spawnButton") <= -1 && ID.IndexOf("btn_edit_") <= -1)
                 return;
-            this.myEditBox = new TextBox();
-            this.myEditBox.Width = 60;
-            this.myEditBox.Height = 30;
-            this.myEditBox.Left = 5;
-            this.myEditBox.Top = this.Height / 2 - this.myEditBox.Height / 2;
-            this.myEditBox.Text = "06";
-            this.myEditBox.TextAlign = HorizontalAlignment.Center;
-            this.Controls.Add((Control)this.myEditBox);
-            this.fillEditBox();
+            myEditBox = new TextBox();
+            myEditBox.Width = 60;
+            myEditBox.Height = 30;
+            myEditBox.Left = 5;
+            myEditBox.Top = Height / 2 - myEditBox.Height / 2;
+            myEditBox.Text = "06";
+            myEditBox.TextAlign = HorizontalAlignment.Center;
+            Controls.Add(myEditBox);
+            fillEditBox();
         }
 
         public void addmyCheckBox()
         {
-            this.hasCheckBox = this.EnableStrings != null && this.EnableStrings.Count > 0;
-            if (!this.hasCheckBox)
+            hasCheckBox = EnableStrings != null && EnableStrings.Count > 0;
+            if (!hasCheckBox)
                 return;
-            this.myCheckBox = new CheckBox();
-            this.myCheckBox.Width = 14;
-            this.myCheckBox.Height = 14;
-            this.myCheckBox.Left = 5;
-            this.myCheckBox.Top = this.Height / 2 - this.myCheckBox.Height / 2;
-            this.Controls.Add((Control)this.myCheckBox);
-            this.myCheckBox.Enabled = false;
+            myCheckBox = new CheckBox();
+            myCheckBox.Width = 14;
+            myCheckBox.Height = 14;
+            myCheckBox.Left = 5;
+            myCheckBox.Top = Height / 2 - myCheckBox.Height / 2;
+            Controls.Add(myCheckBox);
+            myCheckBox.Enabled = false;
         }
 
         public static void saveHotkeys()
         {
             string str = "";
-            if (CheatButton.buttonList.Count <= 0)
+            if (buttonList.Count <= 0)
                 return;
-            for (int index = 0; index < CheatButton.buttonList.Count; ++index)
+            for (int index = 0; index < buttonList.Count; ++index)
             {
-                CheatButton button = CheatButton.buttonList[index];
+                CheatButton button = buttonList[index];
                 str = str + "|" + button.ID + "," + button.hotkey.ToString() + "," + button.controlKey.ToString();
             }
-            CheatButton.saveBox.Text = str;
-            CheatButton.saveBox.SaveFile("Keybinds.dat");
+            saveBox.Text = str;
+            saveBox.SaveFile("Keybinds.dat");
         }
 
         public static void loadHotkeys()
         {
-            CheatButton.saveBox.LoadFile("Keybinds.dat");
-            string text = CheatButton.saveBox.Text;
+            saveBox.LoadFile("Keybinds.dat");
+            string text = saveBox.Text;
             if (text.Length <= 0)
                 return;
             string str1 = text;
+
             char[] chArray1 = new char[1] { '|' };
             foreach (string str2 in str1.Split(chArray1))
             {
                 char[] chArray2 = new char[1] { ',' };
                 string[] strArray = str2.Split(chArray2);
-                for (int index = 0; index < CheatButton.buttonList.Count; ++index)
+                for (int index = 0; index < buttonList.Count; ++index)
                 {
-                    CheatButton button = CheatButton.buttonList[index];
+                    CheatButton button = buttonList[index];
                     if (button.ID == strArray[0])
                     {
                         button.hotkey = uint.Parse(strArray[1]);
@@ -339,9 +340,9 @@ namespace CheatComponents
         public static bool anyEditing()
         {
             bool flag = false;
-            for (int index = 0; index < CheatButton.buttonList.Count; ++index)
+            for (int index = 0; index < buttonList.Count; ++index)
             {
-                if (CheatButton.buttonList[index] != null && CheatButton.buttonList[index].hotkeyMode)
+                if (buttonList[index] != null && buttonList[index].hotkeyMode)
                     flag = true;
             }
             return flag;
@@ -349,18 +350,18 @@ namespace CheatComponents
 
         public static void Hookey()
         {
-            if (CheatButton.hookInstalled)
+            if (hookInstalled)
                 return;
-            CheatButton._hookID = CheatButton.SetHook(CheatButton._proc);
-            CheatButton.hookInstalled = true;
+            _hookID = SetHook(_proc);
+            hookInstalled = true;
         }
 
-        private static IntPtr SetHook(CheatButton.LowLevelKeyboardProc proc)
+        private static IntPtr SetHook(LowLevelKeyboardProc proc)
         {
             using (Process currentProcess = Process.GetCurrentProcess())
             {
                 using (ProcessModule mainModule = currentProcess.MainModule)
-                    return CheatButton.SetWindowsHookEx(13, proc, CheatButton.GetModuleHandle(mainModule.ModuleName), 0U);
+                    return SetWindowsHookEx(13, proc, GetModuleHandle(mainModule.ModuleName), 0U);
             }
         }
 
@@ -369,26 +370,26 @@ namespace CheatComponents
             if (nCode >= 0 && wParam == (IntPtr)256)
             {
                 uint keyVal = (uint)Marshal.ReadInt32(lParam);
-                if (Control.ModifierKeys != 0)
-                    main.sLabel.Text = Control.ModifierKeys.ToString() + " " + ((Keys)keyVal).ToString();
+                if (ModifierKeys != 0)
+                    main.sLabel.Text = ModifierKeys.ToString() + " " + ((Keys)keyVal).ToString();
                 else
                     main.sLabel.Text = ((Keys)keyVal).ToString();
-                for (int index = 0; index < CheatButton.buttonList.Count; ++index)
+                for (int index = 0; index < buttonList.Count; ++index)
                 {
-                    CheatButton button = CheatButton.buttonList[index];
+                    CheatButton button = buttonList[index];
                     if (button.hotkeyMode)
                         button.setHotkey(keyVal);
-                    else if (!CheatButton.anyEditing() && button.hotkey > 0U && (int)button.hotkey == (int)keyVal && Control.ModifierKeys == (Keys)button.controlKey)
+                    else if (!anyEditing() && button.hotkey > 0U && (int)button.hotkey == (int)keyVal && ModifierKeys == (Keys)button.controlKey)
                         button.hotkeyPressed(keyVal);
                 }
             }
-            return CheatButton.CallNextHookEx(CheatButton._hookID, nCode, wParam, lParam);
+            return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(
           int idHook,
-          CheatButton.LowLevelKeyboardProc lpfn,
+          LowLevelKeyboardProc lpfn,
           IntPtr hMod,
           uint dwThreadId);
 
@@ -417,8 +418,8 @@ namespace CheatComponents
           IntPtr hProcess,
           IntPtr lpAddress,
           uint dwSize,
-          CheatButton.AllocationType flAllocationType,
-          CheatButton.MemoryProtection flProtect);
+          AllocationType flAllocationType,
+          MemoryProtection flProtect);
 
         [DllImport("kernel32.dll")]
         public static extern int CloseHandle(IntPtr hObject);
@@ -439,10 +440,10 @@ namespace CheatComponents
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
-            this.Cursor = Cursors.Hand;
-            this.Font = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold, GraphicsUnit.Point, (byte)0);
-            this.ResumeLayout(false);
+            SuspendLayout();
+            Cursor = Cursors.Hand;
+            Font = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ResumeLayout(false);
         }
 
         private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
