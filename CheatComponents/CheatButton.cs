@@ -192,10 +192,10 @@ namespace CheatComponents
         // 메모리 변조 처리 처리 함수 (by 트레이너 버튼 클릭)
         public async void do_click_action(List<string> inStrings)
         {
-            // 게임이 아직 실행중이 아닌 상태에서 미리 메모리 변조를 처리하려고 할 경우
-            if (!GameConnector.gameFound)
+            // 게임이 아직 실행중이 아닌 상태에서 미리 메모리 변조를 하려고 할 경우 (ON / OFF 버튼에 한해서만)
+            if (!GameConnector.gameFound && hasCheckBox)
             {
-                // 게임이 실행될때까지 대기했다가 메모리 변조 처리
+                // 게임이 실행될때까지 대기했다가 실행되면 바로 메모리 변조 처리 (일종의 예약작업)
                 // 비동기적으로 프로세스가 실행될 때까지 기다림
                 await WaitForProcessStartAsync(GameConnector.gameName + ".exe");
             }
