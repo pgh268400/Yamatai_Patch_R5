@@ -86,7 +86,7 @@ namespace CheatComponents
             addmyCheckBox();
             addMyEditBox();
             setColor();
-            addListeners();
+            add_event_listeners();
             Hookey();
             mode_normal();
             saveBox = main.sBox;
@@ -100,13 +100,13 @@ namespace CheatComponents
             myCheckBox.FlatStyle = FlatStyle.Flat;
         }
 
-        public void addListeners()
+        public void add_event_listeners()
         {
-            Click += new EventHandler(self_click);
+            Click += new EventHandler(self_checkbox_click);
             myButton.Click += new EventHandler(hotkey_click);
             if (!hasCheckBox)
                 return;
-            myCheckBox.Click += new EventHandler(self_click);
+            myCheckBox.Click += new EventHandler(self_checkbox_click);
         }
 
         public void setColor()
@@ -144,7 +144,7 @@ namespace CheatComponents
             Text = str1 + str2;
         }
 
-        private void self_click(object sender, EventArgs e)
+        private void self_checkbox_click(object sender, EventArgs e)
         {
             addText("Processing click..." + Text);
             if (hasCheckBox)
@@ -233,7 +233,7 @@ namespace CheatComponents
         public void hotkeyPressed(uint keyVal)
         {
             if (!GameHooks.hotkeysDisabled)
-                self_click(null, null);
+                self_checkbox_click(null, null);
             addText("yeah, hotkey pressed" + keyVal.ToString());
         }
 
@@ -311,10 +311,11 @@ namespace CheatComponents
             saveBox.SaveFile("Keybinds.dat");
         }
 
-        public static void loadHotkeys()
+        public static void load_hotkeys()
         {
             saveBox.LoadFile("Keybinds.dat");
             string text = saveBox.Text;
+
             if (text.Length <= 0)
                 return;
             string str1 = text;

@@ -2215,7 +2215,7 @@ namespace WindowsFormsApplication1
             {
                 "|DC7380|00 00 00 00 00 00 F0 3F |"
             }, null, null);
-            CheatButton.loadHotkeys();
+            CheatButton.load_hotkeys();
         }
 
         // 이 함수는 주어진 Button 객체를 제거하고 대신 CheatButton 객체를 생성하여 추가하는 역할을 합니다.
