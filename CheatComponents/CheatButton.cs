@@ -72,7 +72,10 @@ namespace CheatComponents
             DisableStrings = _DisableStrings;
         }
 
-        public CheatButton() => init();
+        public CheatButton()
+        {
+            init();
+        }
 
         public void init()
         {
@@ -102,11 +105,11 @@ namespace CheatComponents
 
         public void add_event_listeners()
         {
-            Click += new EventHandler(self_checkbox_click);
+            Click += new EventHandler(self_trainer_item_click);
             myButton.Click += new EventHandler(hotkey_click);
             if (!hasCheckBox)
                 return;
-            myCheckBox.Click += new EventHandler(self_checkbox_click);
+            myCheckBox.Click += new EventHandler(self_trainer_item_click);
         }
 
         public void setColor()
@@ -144,20 +147,34 @@ namespace CheatComponents
             Text = str1 + str2;
         }
 
-        private void self_checkbox_click(object sender, EventArgs e)
+        // 트레이너 버튼 클릭시
+        private void self_trainer_item_click(object sender, EventArgs e)
         {
             addText("Processing click..." + Text);
+
+            // 체크박스가 있는 경우
             if (hasCheckBox)
             {
                 myCheckBox.Checked = !myCheckBox.Checked;
                 setColor();
                 if (myCheckBox.Checked)
-                    doClickAction(EnableStrings);
+                    do_click_action(EnableStrings);
                 else
-                    doClickAction(DisableStrings);
+                    do_click_action(DisableStrings);
             }
             if (ClickStrings != null)
-                doClickAction(ClickStrings);
+                do_click_action(ClickStrings);
+
+            /*
+                Windows Forms는 렌더링을 위해 GDI를 사용합니다. GDI는 Windows의 원래 그래픽 인터페이스입니다.
+                GDI 프로그램이 표시되는 내용을 업데이트하려고 할 때 업데이트된 이미지를 화면에 직접 그릴 수는 없습니다 . 
+                대신 Windows에 영역을 업데이트해야 한다고 알려야 합니다. 이를 지역 무효화 라고 합니다. 
+                그런 다음 Windows는 무엇이 유효하지 않고 업데이트가 필요한지에 대한 정보를 제공하는 관련 페인트 메서드를 호출합니다. 
+                그런 다음 페인트 메서드는 업데이트된 내용을 화면에 그려야 합니다.
+
+                Windows Forms에서는 컨트롤을 무효화(invalidate)할 때 컨트롤을 다시 그려야 한다고 요청합니다 .
+                출처 : https://stackoverflow.com/questions/6425161/what-does-invalidate-method-do
+             */
             Invalidate();
         }
 
@@ -172,10 +189,19 @@ namespace CheatComponents
             }
         }
 
-        public void doClickAction(List<string> inStrings)
+        // 메모리 변조 처리 처리 함수 (by 트레이너 버튼 클릭)
+        public async void do_click_action(List<string> inStrings)
         {
+            // 게임이 아직 실행중이 아닌 상태에서 미리 메모리 변조를 처리하려고 할 경우
+            if (!GameConnector.gameFound)
+            {
+                // 게임이 실행될때까지 대기했다가 메모리 변조 처리
+                // 비동기적으로 프로세스가 실행될 때까지 기다림
+                await WaitForProcessStartAsync(GameConnector.gameName + ".exe");
+            }
             if (inStrings == null || inStrings.Count <= 0)
                 return;
+
             for (int index = 0; index < inStrings.Count; ++index)
             {
                 if (Parent != null)
@@ -200,7 +226,56 @@ namespace CheatComponents
             drawMyString();
         }
 
+        private async Task WaitForProcessStartAsync(string processName)
+        {
+            await Task.Run(() =>
+            {
+                // 프로세스가 실행될 때까지 대기
+                while (!conditionMet)
+                {
+                    // optional: sleep을 추가하여 CPU 소비를 줄일 수 있음
+                    Task.Delay(100).Wait();
+                }
+
+                // 특정 조건이 충족되면 프로세스 실행
+                if (conditionMet)
+                {
+                    Process process = new Process();
+                    process.StartInfo.FileName = processName;
+                    process.Start();
+                }
+            });
+        }
+
         public void drawMyString() => GameOverlay.drawString(myCheckBox == null ? (myEditBox == null ? nameString : nameString + " : " + myEditBox.Text) : nameString + " : " + (myCheckBox.Checked ? "Enabled" : "Disabled"));
+
+        /*
+        public void drawMyString()
+        {
+            if (myCheckBox != null)
+            {
+                string displayText = nameString + " : " + (myCheckBox.Checked ? "Enabled" : "Disabled");
+                GameOverlay.drawString(displayText);
+            }
+            else
+            {
+                if (myEditBox == null)
+                {
+                    GameOverlay.drawString(nameString);
+                }
+                else
+                {
+                    string displayText = nameString;
+                    if (!string.IsNullOrEmpty(myEditBox.Text))
+                    {
+                        displayText += " : " + myEditBox.Text;
+                    }
+
+                    GameOverlay.drawString(displayText);
+                }
+            }
+        }
+        */
 
         private void hotkey_click(object sender, EventArgs e)
         {
@@ -228,12 +303,15 @@ namespace CheatComponents
             updateName();
         }
 
-        public void addText(string inString) => main.addText(inString);
+        public void addText(string inString)
+        {
+            main.addText(inString);
+        }
 
         public void hotkeyPressed(uint keyVal)
         {
             if (!GameHooks.hotkeysDisabled)
-                self_checkbox_click(null, null);
+                self_trainer_item_click(null, null);
             addText("yeah, hotkey pressed" + keyVal.ToString());
         }
 
@@ -254,7 +332,10 @@ namespace CheatComponents
             saveHotkeys();
         }
 
-        public Font getFont() => new Font(FontFamily.GenericSansSerif, 10f);
+        public Font getFont()
+        {
+            return new Font(FontFamily.GenericSansSerif, 10f);
+        }
 
         public void addmyButton()
         {

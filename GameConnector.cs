@@ -22,7 +22,7 @@ public class GameConnector
     public static Process[] gameProcess;
     public static string gameName = "TombRaider";
     public static string gameName2 = "flub";
-    public static bool gameFound = false;
+    public static bool gameFound = false; // 게임 찾음 여부 (프로세스 디텍트 여부)
     public static bool wrongVersion = false;
     public static IntPtr gameHandle;
     public static uint gameModuleStart;
@@ -40,8 +40,8 @@ public class GameConnector
       IntPtr hProcess,
       IntPtr lpAddress,
       uint dwSize,
-      GameConnector.AllocationType flAllocationType,
-      GameConnector.MemoryProtection flProtect);
+      AllocationType flAllocationType,
+      MemoryProtection flProtect);
 
     [DllImport("kernel32.dll")]
     public static extern int CloseHandle(IntPtr hObject);
@@ -88,44 +88,44 @@ public class GameConnector
         File.Exists(commandLineArgs[1]);
     }
 
-    public static void patchIntegrityCheck() => GameConnector.log("GameConnector::patchIntegrityCheck() - Nothing to patch.");
+    public static void patchIntegrityCheck() => log("GameConnector::patchIntegrityCheck() - Nothing to patch.");
 
     public static void injectCodeCaves()
     {
-        GameConnector.log("GameConnector::injectCodeCaves() - Attempting 2 injections. ");
-        GameConnector.writeString((IntPtr)9712486, "EB 19 90 8B 87 B4 08 00 00 89 87 B8 08 00 00 C7 87 B4 08 00 00 00 00 00 00 EB D1 E8 00 00 00 00 8B 04 E4 83 C0 0E 89 30 EB 0A 90 90 90 90 90 90 90 90 90 90 58 90 90 C2 04 00");
+        log("GameConnector::injectCodeCaves() - Attempting 2 injections. ");
+        writeString((IntPtr)9712486, "EB 19 90 8B 87 B4 08 00 00 89 87 B8 08 00 00 C7 87 B4 08 00 00 00 00 00 00 EB D1 E8 00 00 00 00 8B 04 E4 83 C0 0E 89 30 EB 0A 90 90 90 90 90 90 90 90 90 90 58 90 90 C2 04 00");
     }
 
     public static void checkConnection()
     {
-        if (!GameConnector.gameFound)
+        if (!gameFound)
         {
-            GameConnector.gameProcess = Process.GetProcessesByName(GameConnector.gameName);
-            if (GameConnector.gameProcess.Length == 0)
-                GameConnector.gameProcess = Process.GetProcessesByName(GameConnector.gameName2);
-            if (GameConnector.gameProcess.Length > 0 && GameConnector.gameProcess[0] != null)
+            gameProcess = Process.GetProcessesByName(gameName);
+            if (gameProcess.Length == 0)
+                gameProcess = Process.GetProcessesByName(gameName2);
+            if (gameProcess.Length > 0 && gameProcess[0] != null)
             {
-                GameConnector.gameFound = true;
-                GameConnector.gameHandle = GameConnector.OpenProcess(56U, 0, (uint)GameConnector.gameProcess[0].Id);
-                GameConnector.gameModuleStart = (uint)GameConnector.gameProcess[0].MainModule.BaseAddress.ToInt32();
-                GameConnector.gameModuleOffset = GameConnector.gameModuleStart - 4194304U;
+                gameFound = true;
+                gameHandle = OpenProcess(56U, 0, (uint)gameProcess[0].Id);
+                gameModuleStart = (uint)gameProcess[0].MainModule.BaseAddress.ToInt32();
+                gameModuleOffset = gameModuleStart - 4194304U;
                 PrivyTokens.doShit();
-                GameConnector.log("\n Game Found :: " + GameConnector.gameHandle.ToString());
-                if (GameConnector.checkVersionFailed())
+                log("\n Game Found :: " + gameHandle.ToString());
+                if (checkVersionFailed())
                 {
-                    GameConnector.gameFound = false;
-                    GameConnector.wrongVersion = true;
+                    gameFound = false;
+                    wrongVersion = true;
                     main.status("Error! - Wrong game version.");
-                    if (GameConnector.ignoreTimer)
+                    if (ignoreTimer)
                         return;
-                    GameConnector.ignoreTimer = true;
+                    ignoreTimer = true;
                     int num = (int)MessageBox.Show("*****Wrong TombRaider.exe Version***** \nYou need version 1.1.748.0 (steam) \n\n Other versions may work but are not supported.\n\n Additional: \nDon't contact me to say \"it dusnt work\"\nunless you're absolutely fucking sure you\nhave the right version!\n\n  Sickle.");
                 }
                 else
                 {
-                    GameConnector.status("Game Found - Ready!");
-                    GameConnector.injectCodeCaves();
-                    GameConnector.patchIntegrityCheck();
+                    status("Game Found - Ready!");
+                    injectCodeCaves();
+                    patchIntegrityCheck();
                 }
             }
             else
@@ -133,37 +133,37 @@ public class GameConnector
         }
         else
         {
-            if (Process.GetProcessesByName(GameConnector.gameName).Length != 0)
+            if (Process.GetProcessesByName(gameName).Length != 0)
                 return;
-            GameConnector.disconnect();
+            disconnect();
         }
     }
 
     public static bool checkVersionFailed()
     {
-        if (GameConnector.ReadByteAdjusted(12061760U) == (byte)86 && GameConnector.ReadByteAdjusted(10640542U) == (byte)80 && GameConnector.ReadByteAdjusted(8480848U) == (byte)15)
+        if (ReadByteAdjusted(12061760U) == (byte)86 && ReadByteAdjusted(10640542U) == (byte)80 && ReadByteAdjusted(8480848U) == (byte)15)
         {
             int num = (int)MessageBox.Show("You are using an older version of TombRaider - Please download YamataiPatch R1, or R2 if you can't update (this is V3).");
         }
-        if (GameConnector.ReadByteAdjusted(12061758U) != (byte)15)
+        if (ReadByteAdjusted(12061758U) != (byte)15)
         {
-            GameConnector.log("failed on 1");
+            log("failed on 1");
             return true;
         }
-        if (GameConnector.ReadByteAdjusted(10640546U) != (byte)235)
+        if (ReadByteAdjusted(10640546U) != (byte)235)
         {
-            GameConnector.log("failed on 2");
+            log("failed on 2");
             return true;
         }
-        if (GameConnector.ReadByteAdjusted(8480848U) == (byte)15)
+        if (ReadByteAdjusted(8480848U) == (byte)15)
             return false;
-        GameConnector.log("failed on 3");
+        log("failed on 3");
         return true;
     }
 
-    public static void disconnect() => GameConnector.gameFound = false;
+    public static void disconnect() => gameFound = false;
 
-    public static int writeString(IntPtr inAddress, string inString) => GameConnector.writeMem(inAddress, GameConnector.convertString(inString));
+    public static int writeString(IntPtr inAddress, string inString) => writeMem(inAddress, convertString(inString));
 
     public static byte[] convertString(string inString)
     {
@@ -178,55 +178,55 @@ public class GameConnector
                 byteList.Add(num);
             }
             else
-                GameConnector.log("Error: removing some garbage");
+                log("Error: removing some garbage");
         }
         return byteList.ToArray();
     }
 
     public static int writeMem(IntPtr inAddress, byte[] inBytes)
     {
-        int num1 = (int)GameConnector.gameModuleStart - 4194304 + inAddress.ToInt32();
+        int num1 = (int)gameModuleStart - 4194304 + inAddress.ToInt32();
         int lpflOldProtect = 0;
-        Kernel.VirtualProtectEx(GameConnector.gameHandle, (IntPtr)num1, inBytes.Length, 64, ref lpflOldProtect);
-        GameConnector.VirtualAllocEx(GameConnector.gameHandle, (IntPtr)num1, (uint)inBytes.Length, GameConnector.AllocationType.Commit, GameConnector.MemoryProtection.ExecuteReadWrite);
-        int num2 = GameConnector.WriteProcessMemory(GameConnector.gameHandle, (IntPtr)num1, inBytes, (uint)inBytes.Length, (IntPtr)0);
+        Kernel.VirtualProtectEx(gameHandle, (IntPtr)num1, inBytes.Length, 64, ref lpflOldProtect);
+        VirtualAllocEx(gameHandle, (IntPtr)num1, (uint)inBytes.Length, AllocationType.Commit, MemoryProtection.ExecuteReadWrite);
+        int num2 = WriteProcessMemory(gameHandle, (IntPtr)num1, inBytes, (uint)inBytes.Length, (IntPtr)0);
         if (num2 == 1)
-            GameConnector.log("Write Succeeded");
+            log("Write Succeeded");
         else
-            GameConnector.log("Write Failed");
+            log("Write Failed");
         return num2;
     }
 
     public static string ReadString(uint pointer)
     {
         byte[] numArray = new byte[24];
-        GameConnector.ReadProcessMemory(GameConnector.gameHandle, (IntPtr)(long)pointer, numArray, (UIntPtr)24U, 0U);
+        ReadProcessMemory(gameHandle, (IntPtr)(long)pointer, numArray, (UIntPtr)24U, 0U);
         return Encoding.UTF8.GetString(numArray);
     }
 
-    public static byte ReadByteAdjusted(uint pointer) => GameConnector.ReadByte(pointer + GameConnector.gameModuleOffset);
+    public static byte ReadByteAdjusted(uint pointer) => ReadByte(pointer + gameModuleOffset);
 
     public static byte ReadByte(uint pointer)
     {
         byte[] lpBuffer = new byte[1];
-        GameConnector.ReadProcessMemory(GameConnector.gameHandle, (IntPtr)(long)pointer, lpBuffer, (UIntPtr)1U, 0U);
+        ReadProcessMemory(gameHandle, (IntPtr)(long)pointer, lpBuffer, (UIntPtr)1U, 0U);
         return lpBuffer[0];
     }
 
     public static int ReadOffset(uint pointer, uint offset)
     {
         byte[] lpBuffer = new byte[24];
-        uint lpBaseAddress = (uint)GameConnector.ReadPointer(pointer) + offset;
-        GameConnector.ReadProcessMemory(GameConnector.gameHandle, (IntPtr)(long)lpBaseAddress, lpBuffer, (UIntPtr)4U, 0U);
+        uint lpBaseAddress = (uint)ReadPointer(pointer) + offset;
+        ReadProcessMemory(gameHandle, (IntPtr)(long)lpBaseAddress, lpBuffer, (UIntPtr)4U, 0U);
         return BitConverter.ToInt32(lpBuffer, 0);
     }
 
-    public static int ReadPointerAdjusted(uint pointer) => GameConnector.ReadPointer(pointer + GameConnector.gameModuleOffset);
+    public static int ReadPointerAdjusted(uint pointer) => ReadPointer(pointer + gameModuleOffset);
 
     public static int ReadPointer(uint pointer)
     {
         byte[] lpBuffer = new byte[24];
-        GameConnector.ReadProcessMemory(GameConnector.gameHandle, (IntPtr)(long)pointer, lpBuffer, (UIntPtr)4U, 0U);
+        ReadProcessMemory(gameHandle, (IntPtr)(long)pointer, lpBuffer, (UIntPtr)4U, 0U);
         return BitConverter.ToInt32(lpBuffer, 0);
     }
 
@@ -334,7 +334,7 @@ public class GameConnector
         public static extern IntPtr ReleaseDC(IntPtr hWnd, IntPtr hDC);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr GetWindowRect(IntPtr hWnd, ref GameConnector.User32.RECT rect);
+        public static extern IntPtr GetWindowRect(IntPtr hWnd, ref RECT rect);
 
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
