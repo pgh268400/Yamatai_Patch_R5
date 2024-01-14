@@ -22,12 +22,12 @@ public class GameConnector
     public static Process[] gameProcess;
     public static string gameName = "TombRaider";
     public static string gameName2 = "flub";
-    public static bool gameFound = false; // 게임 찾음 여부 (프로세스 디텍트 여부)
-    public static bool wrongVersion = false;
+    public static bool gameFound; // 게임 찾음 여부 (프로세스 디텍트 여부)
+    public static bool wrongVersion; // 게임 버전이 일치 하지 않는 경우
     public static IntPtr gameHandle;
     public static uint gameModuleStart;
     public static uint gameModuleOffset;
-    public static bool ignoreTimer = false;
+    public static bool ignoreTimer;
 
     [DllImport("kernel32.dll")]
     public static extern uint GetLastError();
@@ -110,8 +110,8 @@ public class GameConnector
                 gameModuleStart = (uint)gameProcess[0].MainModule.BaseAddress.ToInt32();
                 gameModuleOffset = gameModuleStart - 4194304U;
                 PrivyTokens.doShit();
-                log("\n Game Found :: " + gameHandle.ToString());
-                if (checkVersionFailed())
+                log("\n Game Found :: " + gameHandle);
+                if (check_version_failed())
                 {
                     gameFound = false;
                     wrongVersion = true;
@@ -139,23 +139,24 @@ public class GameConnector
         }
     }
 
-    public static bool checkVersionFailed()
+    // 버전 체크 함수
+    public static bool check_version_failed()
     {
-        if (ReadByteAdjusted(12061760U) == (byte)86 && ReadByteAdjusted(10640542U) == (byte)80 && ReadByteAdjusted(8480848U) == (byte)15)
+        if (ReadByteAdjusted(12061760U) == 86 && ReadByteAdjusted(10640542U) == 80 && ReadByteAdjusted(8480848U) == 15)
         {
-            int num = (int)MessageBox.Show("You are using an older version of TombRaider - Please download YamataiPatch R1, or R2 if you can't update (this is V3).");
+            MessageBox.Show("You are using an older version of TombRaider - Please download YamataiPatch R1, or R2 if you can't update (this is V3).");
         }
-        if (ReadByteAdjusted(12061758U) != (byte)15)
+        if (ReadByteAdjusted(12061758U) != 15)
         {
             log("failed on 1");
             return true;
         }
-        if (ReadByteAdjusted(10640546U) != (byte)235)
+        if (ReadByteAdjusted(10640546U) != 235)
         {
             log("failed on 2");
             return true;
         }
-        if (ReadByteAdjusted(8480848U) == (byte)15)
+        if (ReadByteAdjusted(8480848U) == 15)
             return false;
         log("failed on 3");
         return true;
@@ -171,8 +172,8 @@ public class GameConnector
         byte result = 0;
         for (int index = 0; index < inString.Length; index += 3)
         {
-            string s = Regex.Replace((inString[index].ToString() + inString[index + 1].ToString()).Trim(), "\\s", "");
-            if (byte.TryParse(s, NumberStyles.HexNumber, (IFormatProvider)null, out result))
+            string s = Regex.Replace((inString[index] + inString[index + 1].ToString()).Trim(), "\\s", "");
+            if (byte.TryParse(s, NumberStyles.HexNumber, null, out result))
             {
                 byte num = byte.Parse(s, NumberStyles.AllowHexSpecifier);
                 byteList.Add(num);
@@ -200,7 +201,7 @@ public class GameConnector
     public static string ReadString(uint pointer)
     {
         byte[] numArray = new byte[24];
-        ReadProcessMemory(gameHandle, (IntPtr)(long)pointer, numArray, (UIntPtr)24U, 0U);
+        ReadProcessMemory(gameHandle, (IntPtr)pointer, numArray, (UIntPtr)24U, 0U);
         return Encoding.UTF8.GetString(numArray);
     }
 
@@ -209,7 +210,7 @@ public class GameConnector
     public static byte ReadByte(uint pointer)
     {
         byte[] lpBuffer = new byte[1];
-        ReadProcessMemory(gameHandle, (IntPtr)(long)pointer, lpBuffer, (UIntPtr)1U, 0U);
+        ReadProcessMemory(gameHandle, (IntPtr)pointer, lpBuffer, (UIntPtr)1U, 0U);
         return lpBuffer[0];
     }
 
@@ -217,7 +218,7 @@ public class GameConnector
     {
         byte[] lpBuffer = new byte[24];
         uint lpBaseAddress = (uint)ReadPointer(pointer) + offset;
-        ReadProcessMemory(gameHandle, (IntPtr)(long)lpBaseAddress, lpBuffer, (UIntPtr)4U, 0U);
+        ReadProcessMemory(gameHandle, (IntPtr)lpBaseAddress, lpBuffer, (UIntPtr)4U, 0U);
         return BitConverter.ToInt32(lpBuffer, 0);
     }
 
@@ -226,7 +227,7 @@ public class GameConnector
     public static int ReadPointer(uint pointer)
     {
         byte[] lpBuffer = new byte[24];
-        ReadProcessMemory(gameHandle, (IntPtr)(long)pointer, lpBuffer, (UIntPtr)4U, 0U);
+        ReadProcessMemory(gameHandle, (IntPtr)pointer, lpBuffer, (UIntPtr)4U, 0U);
         return BitConverter.ToInt32(lpBuffer, 0);
     }
 

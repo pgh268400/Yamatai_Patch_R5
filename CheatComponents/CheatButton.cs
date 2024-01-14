@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApplication1;
 
@@ -86,7 +87,7 @@ namespace CheatComponents
             Height = 40;
             buttonList.Add(this);
             addmyButton();
-            addmyCheckBox();
+            add_my_checkbox();
             addMyEditBox();
             setColor();
             add_event_listeners();
@@ -150,7 +151,7 @@ namespace CheatComponents
         // 트레이너 버튼 클릭시
         private void self_trainer_item_click(object sender, EventArgs e)
         {
-            addText("Processing click..." + Text);
+            log_text("Processing click..." + Text);
 
             // 체크박스가 있는 경우
             if (hasCheckBox)
@@ -193,12 +194,29 @@ namespace CheatComponents
         public async void do_click_action(List<string> inStrings)
         {
             // 게임이 아직 실행중이 아닌 상태에서 미리 메모리 변조를 하려고 할 경우 (ON / OFF 버튼에 한해서만)
+
+            /*
             if (!GameConnector.gameFound && hasCheckBox)
             {
                 // 게임이 실행될때까지 대기했다가 실행되면 바로 메모리 변조 처리 (일종의 예약작업)
                 // 비동기적으로 프로세스가 실행될 때까지 기다림
-                await WaitForProcessStartAsync(GameConnector.gameName + ".exe");
+
+                addText("프로그램이 아직 실행되지 않았습니다. 실행될때까지 대기하고 자동 적용하겠습니다 ^^>>");
+                await wait_process_start_async(GameConnector.gameName);
+
+                // 트레이너 예약 적용이 실행될 타이밍에 체크박스가 풀려있으면
+                if (!myCheckBox.Checked)
+                {
+                    // 적용하지 않는다
+                    addText("프로그램이 실행되었으나 체크박스가 풀려있어서 적용하지 않습니다.");
+                    return;
+                }
             }
+            
+
+            addText("적용 " + Text);
+            */
+
             if (inStrings == null || inStrings.Count <= 0)
                 return;
 
@@ -226,23 +244,21 @@ namespace CheatComponents
             drawMyString();
         }
 
-        private async Task WaitForProcessStartAsync(string processName)
+        private bool is_process_running(string process_name)
+        {
+            Process[] processes = Process.GetProcessesByName(process_name);
+            return processes.Length > 0;
+        }
+
+        private async Task wait_process_start_async(string process_name)
         {
             await Task.Run(() =>
             {
                 // 프로세스가 실행될 때까지 대기
-                while (!conditionMet)
+                while (!is_process_running(process_name))
                 {
                     // optional: sleep을 추가하여 CPU 소비를 줄일 수 있음
-                    Task.Delay(100).Wait();
-                }
-
-                // 특정 조건이 충족되면 프로세스 실행
-                if (conditionMet)
-                {
-                    Process process = new Process();
-                    process.StartInfo.FileName = processName;
-                    process.Start();
+                    Task.Delay(1000).Wait();
                 }
             });
         }
@@ -279,7 +295,7 @@ namespace CheatComponents
 
         private void hotkey_click(object sender, EventArgs e)
         {
-            addText("Hotkey Click!");
+            log_text("Hotkey Click!");
             if (hotkeyMode)
                 mode_normal();
             else
@@ -303,7 +319,7 @@ namespace CheatComponents
             updateName();
         }
 
-        public void addText(string inString)
+        public void log_text(string inString)
         {
             main.addText(inString);
         }
@@ -312,14 +328,14 @@ namespace CheatComponents
         {
             if (!GameHooks.hotkeysDisabled)
                 self_trainer_item_click(null, null);
-            addText("yeah, hotkey pressed" + keyVal.ToString());
+            log_text("yeah, hotkey pressed" + keyVal.ToString());
         }
 
         public void setHotkey(uint keyVal)
         {
             if (27U != keyVal)
             {
-                addText("Setting my hotkey" + keyVal.ToString());
+                log_text("Setting my hotkey" + keyVal.ToString());
                 hotkey = keyVal;
                 controlKey = (uint)ModifierKeys;
             }
@@ -329,7 +345,7 @@ namespace CheatComponents
                 controlKey = 0U;
             }
             updateName();
-            saveHotkeys();
+            save_hotkeys();
         }
 
         public Font getFont()
@@ -364,7 +380,7 @@ namespace CheatComponents
             fillEditBox();
         }
 
-        public void addmyCheckBox()
+        public void add_my_checkbox()
         {
             hasCheckBox = EnableStrings != null && EnableStrings.Count > 0;
             if (!hasCheckBox)
@@ -378,7 +394,7 @@ namespace CheatComponents
             myCheckBox.Enabled = false;
         }
 
-        public static void saveHotkeys()
+        public static void save_hotkeys()
         {
             string str = "";
             if (buttonList.Count <= 0)

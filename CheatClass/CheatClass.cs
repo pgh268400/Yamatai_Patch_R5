@@ -8,11 +8,11 @@ using System.Windows.Forms;
 
 namespace CheatClass
 {
-  public class CheatClass
-  {
-    public uint hotkey = 33;
-    public Button myButton;
+    public class CheatClass
+    {
+        public uint hotkey = 33;
+        public Button myButton;
 
-    public CheatClass() => this.hotkey = 32U;
-  }
+        public CheatClass() => this.hotkey = 32U;
+    }
 }
