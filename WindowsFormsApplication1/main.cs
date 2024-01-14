@@ -904,6 +904,7 @@ namespace WindowsFormsApplication1
             this.linkLabel3.TabIndex = 78;
             this.linkLabel3.TabStop = true;
             this.linkLabel3.Text = "Edit : File(pgh268400)";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.editor_link_label_LinkClicked);
             // 
             // btn_runspeed_walk
             // 
@@ -1050,7 +1051,7 @@ namespace WindowsFormsApplication1
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "Homepage: sicklebrick.com";
             this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
-            this.linkLabel2.Click += new System.EventHandler(this.linkLabel2_Click);
+            this.linkLabel2.Click += new System.EventHandler(this.sickebrick_link_label_Click);
             // 
             // linkLabel1
             // 
@@ -1062,7 +1063,7 @@ namespace WindowsFormsApplication1
             this.linkLabel1.TabIndex = 48;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "TombraiderForums Release Thread";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.forum_link_label_LinkClicked);
             // 
             // btn_salvagepoints
             // 
@@ -2668,22 +2669,27 @@ namespace WindowsFormsApplication1
         {
         }
 
-        private void linkLabel2_Click(object sender, EventArgs e)
+        private void sickebrick_link_label_Click(object sender, EventArgs e)
         {
             Process.Start("http://sicklebrick.com/?p=513");
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void forum_link_label_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("http://www.tombraiderforums.com/showthread.php?p=6784668");
+        }
+
+        private void editor_link_label_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/pgh268400");
         }
 
         private void button1_Click_6(object sender, EventArgs e)
         {
             int num1 = GameConnector.ReadPointer(38917784U);
             int num2 = num1 + 1104 + 144;
-            int num3 = (int)MessageBox.Show("constant val is " + num1.ToString("X"));
-            int num4 = (int)MessageBox.Show("constant val is " + num2.ToString("X"));
+            MessageBox.Show("constant val is " + num1.ToString("X"));
+            MessageBox.Show("constant val is " + num2.ToString("X"));
         }
 
         private void label12_Click(object sender, EventArgs e)
@@ -2721,5 +2727,7 @@ namespace WindowsFormsApplication1
         {
 
         }
+
+
     }
 }

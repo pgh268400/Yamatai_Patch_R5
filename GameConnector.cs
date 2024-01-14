@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -22,12 +23,14 @@ public class GameConnector
     public static Process[] gameProcess;
     public static string gameName = "TombRaider";
     public static string gameName2 = "flub";
+    public static bool user_select_is_patch = true; // 유저가 패치 함을 선택했는지 여부
     public static bool gameFound; // 게임 찾음 여부 (프로세스 디텍트 여부)
     public static bool wrongVersion; // 게임 버전이 일치 하지 않는 경우
     public static IntPtr gameHandle;
     public static uint gameModuleStart;
     public static uint gameModuleOffset;
     public static bool ignoreTimer;
+
 
     [DllImport("kernel32.dll")]
     public static extern uint GetLastError();
@@ -96,6 +99,51 @@ public class GameConnector
         writeString((IntPtr)9712486, "EB 19 90 8B 87 B4 08 00 00 89 87 B8 08 00 00 C7 87 B4 08 00 00 00 00 00 00 EB D1 E8 00 00 00 00 8B 04 E4 83 C0 0E 89 30 EB 0A 90 90 90 90 90 90 90 90 90 90 58 90 90 C2 04 00");
     }
 
+    public static void backup_original_files(string game_exe_path)
+    {
+        //game_exe 경로에서 파일명만 제외
+        string dir_name = Path.GetDirectoryName(game_exe_path);
+
+        //dir_name과 steam_api.dll 파일명을 합쳐서 경로를 만듬
+        string steam_api_dll_path = Path.Combine(dir_name, "steam_api.dll");
+
+        //tombraider_backup 폴더를 생성
+        string backup_dir = Path.Combine(dir_name, "tombraider_backup");
+        Directory.CreateDirectory(backup_dir);
+
+        //steam_api.dll 파일을 tombraider_backup 폴더에 복사
+        File.Copy(steam_api_dll_path, Path.Combine(backup_dir, "steam_api.dll"), true);
+
+        //tombraider.exe 파일을 tombraider_backup 폴더에 복사
+        File.Copy(game_exe_path, Path.Combine(backup_dir, gameName + ".exe"), true);
+    }
+
+    public static void patch_game_to_fit(string game_exe_path)
+    {
+        // 실행 파일 경로 위치에서 source 폴더를 찾는다
+        string source_dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "patch");
+
+        // source 폴더에 있는 파일들을 가져온다
+        string[] files = Directory.GetFiles(source_dir);
+
+        // 파일들을 하나씩 가져와서 실행 파일 경로 위치에 복사한다
+
+        //game_exe 경로에서 파일명만 제외
+        string dir_name = Path.GetDirectoryName(game_exe_path);
+
+        foreach (string file in files)
+        {
+            //파일명만 가져옴
+            string file_name = Path.GetFileName(file);
+
+            //dir_name과 파일명을 합쳐서 경로를 만듬
+            string dest_file_path = Path.Combine(dir_name, file_name);
+
+            //파일을 복사
+            File.Copy(file, dest_file_path, true);
+        }
+    }
+
     public static void checkConnection()
     {
         if (!gameFound)
@@ -111,6 +159,71 @@ public class GameConnector
                 gameModuleOffset = gameModuleStart - 4194304U;
                 PrivyTokens.doShit();
                 log("\n Game Found :: " + gameHandle);
+
+                // 먼저 스팀 최신 버전을 사용중인지 확인한다.
+                if (user_select_is_patch && check_steam_latest_version())
+                {
+                    // 스팀 최신 버전(1.01)을 사용중인 경우 1.1.748.0 으로 자동 패치할 것인지 묻는다.
+                    log("Steam latest version of Tomb Raider detected, patch required.");
+                    DialogResult user_input = MessageBox.Show("Steam latest version of Tomb Raider detected (v1.01.0.0), patch required.\n\nDo you want to patch the game to 1.1.748.0?", "Alert", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (user_input == DialogResult.Yes)
+                    {
+                        // 실행 파일 경로에 patch 폴더가 없거나 비어있는 경우
+                        /*
+                        if (!Directory.Exists(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath),
+                                "patch")) ||
+                            Directory.GetFiles(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "patch"))
+                                .Length == 0)
+                        {
+                            MessageBox.Show("Patch files not found. Please download the patch files and place them in the patch folder.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Application.Exit();
+                        }
+                        */
+
+                        try
+                        {
+                            // 사용자가 패치를 원하는 경우 패치를 진행한다.
+                            log("User selected to patch the game.");
+
+                            // 툼 레이더 게임 실행 파일의 경로를 가져온다.
+                            string game_exe_path = gameProcess[0].MainModule.FileName;
+
+
+                            // 현재 실행중인 툼레이더 프로세스를 강제 종료한다.
+                            gameProcess[0].Kill();
+
+                            // 프로세스가 종료될 때까지 대기한다.
+                            gameProcess[0].WaitForExit();
+
+                            // 원래 툼레이더 파일과 실행에 필요한 steam_api.dll 파일을 백업한다.
+                            backup_original_files(game_exe_path);
+
+                            // 패치를 진행한다.
+                            patch_game_to_fit(game_exe_path);
+                        }
+                        catch (Exception e)
+                        {
+                            // 메세지로 출력
+                            MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            // 패치 실패 출력
+                            MessageBox.Show("Patch failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            //프로그램 종료
+                            Application.Exit();
+                        }
+
+                        // 패치가 완료되면 프로그램을 재시작 한다 - 재시작 메세지도 출력
+                        MessageBox.Show("Patch complete. Please restart the game.", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Application.Restart();
+                    }
+                    else
+                    {
+                        log("User selected to not patch the game.");
+                        user_select_is_patch = false;
+                    }
+                }
+
                 if (check_version_failed())
                 {
                     gameFound = false;
@@ -119,7 +232,7 @@ public class GameConnector
                     if (ignoreTimer)
                         return;
                     ignoreTimer = true;
-                    int num = (int)MessageBox.Show("*****Wrong TombRaider.exe Version***** \nYou need version 1.1.748.0 (steam) \n\n Other versions may work but are not supported.\n\n Additional: \nDon't contact me to say \"it dusnt work\"\nunless you're absolutely fucking sure you\nhave the right version!\n\n  Sickle.");
+                    MessageBox.Show("*****Wrong TombRaider.exe Version***** \nYou need version 1.1.748.0 (steam) \n\n Other versions may work but are not supported.\n\n Additional: \nDon't contact me to say \"it doesn't work\"\nunless you're absolutely fucking sure you\nhave the right version!\n\n  Sickle.");
                 }
                 else
                 {
@@ -139,7 +252,58 @@ public class GameConnector
         }
     }
 
-    // 버전 체크 함수
+    // 스팀 최신 버전 체크 함수 (아래 버전 체크 함수보다 먼저 체크)
+    public static bool check_steam_latest_version()
+    {
+        // 실행중인 게임 프로세스의 경로 얻어오기
+        // 특정 이름을 가진 모든 프로세스 찾기
+        Process[] processes = Process.GetProcessesByName(gameName);
+        if (processes.Length <= 0) return false;
+
+        // 여러 개의 프로세스 중 첫 번째 프로세스를 대상으로 선택
+        Process target_process = processes[0];
+
+        // 프로세스의 실행 파일 경로 얻기
+        string game_file_path = target_process.MainModule.FileName;
+
+        // 결과 출력
+        //log(game_file_path);
+
+        if (game_file_path.Trim() != "")
+        {
+            // 게임 파일의 해쉬값 체크
+            string hash = calculate_file_hash(game_file_path);
+            //log("GameConnector::check_steam_latest_version() - hash: " + hash);
+            if (hash == "F36B8DD2BD74D48C14BF910AD9BD4AC9F4024433523FFC7E46D5C85C3DD618F5")
+            {
+                // 스팀 최신 버전 1.01 을 사용중인 경우
+                return true;
+            }
+        }
+
+        // 위 조건에 부합하지 않으면 스팀 최신 버전이 아님
+        return false;
+    }
+
+    // exe 바이너리 파일을 읽어서 해쉬값을 리턴하는 함수
+    public static string calculate_file_hash(string exe_file_path)
+    {
+        using (var sha256 = SHA256.Create())
+        {
+            // 파일을 스트림 형태로 읽어낸다
+            using (var stream = File.OpenRead(exe_file_path))
+            {
+                // 파일의 해시 계산
+                byte[] hash_bytes = sha256.ComputeHash(stream);
+
+                // 계산된 해시를 문자열로 변환
+                string hash_value = BitConverter.ToString(hash_bytes).Replace("-", String.Empty);
+                return hash_value;
+            }
+        }
+    }
+
+    // 버전 체크 함수 (실행중에 프로세스 RAM 읽기로 체크)
     public static bool check_version_failed()
     {
         if (ReadByteAdjusted(12061760U) == 86 && ReadByteAdjusted(10640542U) == 80 && ReadByteAdjusted(8480848U) == 15)
