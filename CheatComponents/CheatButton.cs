@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -410,6 +411,16 @@ namespace CheatComponents
 
         public static void load_hotkeys()
         {
+            //Keybinds.dat 파일이 있는지 체크
+            if (!File.Exists("Keybinds.dat"))
+            {
+                // 없다면 기본값 생성
+                FileStream fs = File.Create("Keybinds.dat");
+                fs.Close();
+
+                // 파일에 내용 추가
+                File.AppendAllText("Keybinds.dat", "{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0\\fnil\\fcharset0 Microsoft Sans Serif;}}\r\n\\viewkind4\\uc1\\pard\\lang2057\\f0\\fs17 |btn_health,0,0|btn_ammo,0,0|btn_reload,0,0|btn_damagesquared,0,0|btn_skillpoints,65,0|btn_salvagepoints,65,0|btn_upgrades,0,0|btn_clean_lara,0,0|btn_no_weaps,0,0|btn_jumpheight_0,0,0|btn_jumpheight_1,0,0|btn_jumpheight_2,0,0|btn_jumpheight_3,0,0|btn_noclip,0,0|btn_static_lara,0,0|btn_jiggletitsoff,0,0|btn_jiggletitson,0,0|btn_jiggletitsmega,0,0|btn_outfits,0,0|btn_normaltits,0,0|btn_bigtits,0,0|btn_biggertits,0,0|btn_smalltits,0,0|btn_runspeednormal,0,0|btn_runspeedplus,0,0|btn_runspeedplusplus,0,0|btn_runspeed_walk,0,0|btn_hover_none,0,0|btn_hover_up,0,0|btn_hover_down,0,0|btn_levitate,101,0|btn_no_wobble,0,0|btn_normal_ammo,0,0|btn_salvagearrows,0,0|btn_spawnwolves,0,0|btn_edit_PlayerX,0,0|btn_edit_PlayerY,0,0|btn_edit_PlayerX,0,0|btn_edit_cam_x,0,0|btn_edit_cam_y,0,0|btn_edit_cam_z,0,0|btn_warpnorth,104,0|bth_warpsouth,98,0|bth_warpwest,100,0|btn_warpeast,102,0|btn_warpup,103,0|btn_warpdown,97,0|btn_nudge_cam_north,0,0|btn_nudge_cam_south,0,0|btn_nudge_cam_east,0,0|btn_nudge_cam_west,0,0|btn_nudge_cam_up,0,0|btn_nudge_cam_down,0,0|btn_nudge_dist_up,0,0|btn_nudge_dist_down,0,0|btn_player_nudge_dist_up,0,0|btn_player_nudge_dist_down,0,0|btn_saveposition,0,0|btn_restoreposition,0,0|btn_lock_cam_x,0,0|btn_lock_cam_y,0,0|btn_lock_cam_z,0,0|btn_lock_cam_yaw,0,0|btn_lock_cam_pitch,0,0|btn_invisible_lara,0,0|btn_camchase_far,0,0|btn_cam_zoom,0,0|btn_rgb_boost,0,0|btn_bright_norm,0,0|btn_bright_0,0,0|btn_bright_1,0,0|btn_bright_2,0,0|btn_bright_3,0,0|btn_bright_4,0,0|btn_contrast_norm,0,0|btn_contrast_hi,0,0|btn_contrast_low,0,0\\par\r\n}\r\n ");
+            }
             saveBox.LoadFile("Keybinds.dat");
             string text = saveBox.Text;
 
