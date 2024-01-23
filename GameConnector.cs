@@ -120,28 +120,19 @@ public class GameConnector
 
     public static void patch_game_to_fit(string game_exe_path)
     {
-        // 실행 파일 경로 위치에서 source 폴더를 찾는다
-        string source_dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "patch");
-
-        // source 폴더에 있는 파일들을 가져온다
-        string[] files = Directory.GetFiles(source_dir);
-
-        // 파일들을 하나씩 가져와서 실행 파일 경로 위치에 복사한다
-
         //game_exe 경로에서 파일명만 제외
         string dir_name = Path.GetDirectoryName(game_exe_path);
 
-        foreach (string file in files)
-        {
-            //파일명만 가져옴
-            string file_name = Path.GetFileName(file);
+        // 리소스 파일 2개를 가져온다
+        byte[] steam_api_dll = Properties.Resources.steam_api;
+        byte[] tomb_raider_exe = Properties.Resources.TombRaider;
 
-            //dir_name과 파일명을 합쳐서 경로를 만듬
-            string dest_file_path = Path.Combine(dir_name, file_name);
+        string steam_api_dest = Path.Combine(dir_name, "steam_api.dll");
+        string tomb_raider_dest = Path.Combine(dir_name, gameName + ".exe");
 
-            //파일을 복사
-            File.Copy(file, dest_file_path, true);
-        }
+        // 리소스 파일을 파일로 저장한다.
+        File.WriteAllBytes(steam_api_dest, steam_api_dll);
+        File.WriteAllBytes(tomb_raider_dest, tomb_raider_exe);
     }
 
     public static void checkConnection()

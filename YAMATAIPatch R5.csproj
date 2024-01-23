@@ -45,6 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameConnector.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="TransparentLabel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -347,6 +352,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CheatComponents\CheatButton.resx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="WindowsFormsApplication1\btn_runspeed.resx" />
     <EmbeddedResource Include="WindowsFormsApplication1\main.resx">
       <DependentUpon>main.cs</DependentUpon>
@@ -355,6 +364,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\steam_api.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TombRaider.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
